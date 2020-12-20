@@ -33,9 +33,16 @@ function makePage() {
             var mdata = metadata[index];
             mdata = [mdata]
             mdata = mdata[0]
-            console.log(mdata.id);
+            console.log(mdata);
             var space = d3.select(".panel-body");
             space.html("");
+            space.append("li").text(`ID Number: ${mdata.id}`);
+            space.append("li").text(`Age: ${mdata.age}`);
+            space.append("li").text(`BBTYPE: ${mdata.bbtype}`);
+            space.append("li").text(`Ethnicity: ${mdata.ethnicity}`);
+            space.append("li").text(`Gender: ${mdata.gender}`);
+            space.append("li").text(`Location: ${mdata.location}`);
+            space.append("li").text(`WFREQ: ${mdata.wfreq}`);
             
             //1) combine the arrays:
             var list = [];
