@@ -4,7 +4,6 @@ function makePage() {
         var names = data.names;
         var metadata = data.metadata;
         var samples = data.samples;
-        //console.log(data);
     
         // Fill in dropdown menu and update page
         var dropdown = document.getElementById("selDataset");
@@ -31,8 +30,8 @@ function makePage() {
     
             // Fill in Metadata
             var mdata = metadata[index];
-            mdata = [mdata]
-            mdata = mdata[0]
+            mdata = [mdata];
+            mdata = mdata[0];
             console.log(mdata);
             var space = d3.select(".panel-body");
             space.html("");
@@ -44,19 +43,19 @@ function makePage() {
             space.append("li").text(`Location: ${mdata.location}`);
             space.append("li").text(`WFREQ: ${mdata.wfreq}`);
             
-            //1) combine the arrays:
+            // Combine the arrays:
             var list = [];
             for (var j = 0; j < sample_value.length; j++) 
             list.push({'otunumber': otu_id[j], 'samplevalue': sample_value[j], 'otuname': otu_label[j], 'otujnumber' : otujnumber[j]});
 
-            //2) sort:
+            // Sort for Top 10 OTUs:
             list.sort(function(a, b) {
             return ((a.samplevalue < b.samplevalue) ? 1 : ((a.samplevalue == b.samplevalue) ? 0 : 1));
             });
 
             list = list.slice(0,10);
 
-            //3) separate them back out:
+            // Separate them back out:
             for (var k = 0; k < list.length; k++) {
             otu_id[k] = list[k].otunumber;
             sample_value[k] = list[k].samplevalue;
@@ -64,65 +63,64 @@ function makePage() {
             otujnumber[k] = list[k].otujnumber;
             }
 
-        // Create bubble chart that displays each sample
-        var bubble = [
-            {
-            x: otujnumber,
-            y: sample_value,
-            text: otu_label,
-            mode: 'markers',
-            marker: {
-              color: otujnumber,
-              size: sample_value
+            // Create bubble chart that displays each sample
+            var bubble = [
+                {
+                x: otujnumber,
+                y: sample_value,
+                text: otu_label,
+                mode: 'markers',
+                marker: {
+                    color: otujnumber,
+                    size: sample_value
+                }
+            }];
+          
+            var blayout = {
+                title: 'Sample Values of OTU IDs in an Individual',
+                showlegend: false,
+                height: 500,
+                width: 1000,
+                xaxis: {title: 'OTU ID'},
+                yaxis: {title: 'Sample Values'},
+            };
+          
+            Plotly.newPlot('bubble', bubble, blayout);
+
+            function createHbar() {
+                for(var i=0;i<otu_id.length;i++){
+                otu_id[i]="OTU "+otu_id[i];
             }
-          }];
-          
-          var blayout = {
-            title: 'Sample Values of OTU IDs in an Individual',
-            showlegend: false,
-            height: 500,
-            width: 1000,
-            xaxis: {title: 'OTU ID'},
-            yaxis: {title: 'Sample Values'},
-          };
-          
-          Plotly.newPlot('bubble', bubble, blayout);
-
-        function createHbar() {
-
-        for(var i=0;i<otu_id.length;i++){
-            otu_id[i]="OTU "+otu_id[i];
-        }
-        // Create hbar chart w dropdown to display top 10 OTUs in an individual
-        var hbar = [
-            {
-            x: sample_value.slice(0,10),
-            y: otu_id.slice(0,10),
-            type: 'bar',
-            text: otu_label.slice(0,10),
-            orientation: 'h',
-            transforms: [{
+            
+            // Create hbar chart w dropdown to display top 10 OTUs in an individual
+            var hbar = [
+                {
+                x: sample_value.slice(0,10),
+                y: otu_id.slice(0,10),
+                type: 'bar',
+                text: otu_label.slice(0,10),
+                orientation: 'h',
+                transforms: [{
                 type: 'sort',
                 target: 'y',
                 order: 'descending'
-              }]
-          }];
+                }]
+            }];
 
-          var layout = {
-            xaxis: {title: 'Sample Value'},
-            yaxis: {title: 'OTU ID'},
-            title: 'Top 10 OTUs in an Individual',
-            height: 500,
-            width: 500
-          };
+            var layout = {
+                xaxis: {title: 'Sample Value'},
+                yaxis: {title: 'OTU ID'},
+                title: 'Top 10 OTUs in an Individual',
+                height: 500,
+                width: 500
+            };
         
-          Plotly.newPlot("bar", hbar, layout);
+            Plotly.newPlot("bar", hbar, layout);
+            }
 
-        }
-
-        createHbar();
-        }
-        }
-    )};
+            createHbar();
+            }
+            }
+        )};
 
 makePage();
